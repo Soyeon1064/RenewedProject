@@ -8,132 +8,32 @@
     android:orientation="vertical"
     android:background="#ffffff">
 
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="300dp"
+        android:layout_height="211dp"
+        android:src="@drawable/logo" />
 
-    <FrameLayout
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="303dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/splasheffect" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="758dp"
-            android:orientation="vertical">
+    <ImageView
+        android:id="@+id/imageView8"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:scaleType="fitEnd"
+        android:src="@drawable/splashdeco02" />
 
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:src="@drawable/splash" />
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="match_parent"
-                android:layout_height="201dp"
-                android:src="@drawable/logo1" />
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/copyright" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/title" />
-
-
-    </FrameLayout>
-
-    <!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:orientation="vertical">-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/imageView4"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="228dp"-->
-<!--            android:layout_alignParentStart="true"-->
-<!--            android:layout_alignParentTop="true"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_marginStart="0dp"-->
-<!--            android:layout_marginTop="0dp"-->
-<!--            android:layout_marginEnd="5dp"-->
-<!--            android:scaleType="fitCenter"-->
-<!--            app:srcCompat="@drawable/logo1" />-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/imageView3"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            app:srcCompat="@drawable/copyright" />-->
-
-<!--    </LinearLayout>-->
+    <ImageView
+        android:id="@+id/copyright"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitEnd"
+        android:src="@drawable/copyright" />
 
 </LinearLayout>
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    tools:context=".SplashActivity"-->
-<!--    android:orientation="vertical"-->
-<!--    android:background="#ffffff">-->
 
-
-<!--    <FrameLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="407dp">-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/imageView"-->
-<!--            android:layout_width="434dp"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_weight="5"-->
-<!--            android:scaleType="fitXY"-->
-<!--            app:srcCompat="@drawable/splash" />-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/imageView2"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="208dp"-->
-<!--            android:layout_gravity="bottom"-->
-<!--            app:srcCompat="@drawable/title" />-->
-
-<!--    </FrameLayout>-->
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:orientation="vertical">-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/imageView4"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="228dp"-->
-<!--            android:layout_alignParentStart="true"-->
-<!--            android:layout_alignParentTop="true"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_marginStart="0dp"-->
-<!--            android:layout_marginTop="0dp"-->
-<!--            android:layout_marginEnd="5dp"-->
-<!--            android:scaleType="fitCenter"-->
-<!--            app:srcCompat="@drawable/logo1" />-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/imageView3"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_alignParentEnd="true"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            app:srcCompat="@drawable/copyright" />-->
-
-<!--    </LinearLayout>-->
-
-<!--</LinearLayout>-->

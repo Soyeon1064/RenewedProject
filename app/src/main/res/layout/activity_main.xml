@@ -1,41 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_height="178dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp">
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:scaleType="fitStart"
+            app:srcCompat="@drawable/logo" />
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/button0"
+                android:id="@+id/button00"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#00ffffff"
+                android:background="#00FFFFFF"
                 android:onClick="onTTSButtonClicked" />
 
             <ImageView
-                android:id="@+id/imageButton0"
+                android:id="@+id/imageView4"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="#00FFFFFF"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="15dp"
                 android:scaleType="fitXY"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/menu0" />
+
         </FrameLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -43,21 +61,20 @@
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/button1"
+                android:id="@+id/button01"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#00ffffff"
                 android:onClick="onButtonCameraClicked" />
 
             <ImageView
-                android:id="@+id/imageButton1"
-                android:layout_width="match_parent"
+                android:id="@+id/menu01"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="#00FFFFFF"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/menu1" />
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:scaleType="fitStart"
+                app:srcCompat="@drawable/menu01" />
         </FrameLayout>
 
         <FrameLayout
@@ -66,21 +83,20 @@
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/button02"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#00ffffff"
                 android:onClick="onMembershipButtonClicked" />
 
             <ImageView
-                android:id="@+id/imageButton2"
-                android:layout_width="match_parent"
+                android:id="@+id/menu02"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="#00FFFFFF"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/menu2" />
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:scaleType="fitStart"
+                app:srcCompat="@drawable/menu02" />
         </FrameLayout>
 
         <FrameLayout
@@ -89,24 +105,23 @@
             android:layout_weight="1">
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/button03"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#00ffffff"
                 android:onClick="onLocationButtonClicked" />
 
             <ImageView
-                android:id="@+id/imageButton3"
-                android:layout_width="match_parent"
+                android:id="@+id/menu03"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="7dp"
-                android:background="#00FFFFFF"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/menu3" />
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:scaleType="fitStart"
+                app:srcCompat="@drawable/menu03" />
 
         </FrameLayout>
-
     </LinearLayout>
-</FrameLayout>
 
+
+</LinearLayout>

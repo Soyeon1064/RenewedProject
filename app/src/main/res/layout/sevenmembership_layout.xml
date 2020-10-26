@@ -6,36 +6,86 @@
     android:gravity="center"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="109dp"
-        android:scaleType="centerInside"
-        app:srcCompat="@drawable/sevenlogo" />
-
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="120dp"
-        android:layout_marginBottom="120dp"
-        android:orientation="vertical">
+        android:layout_weight="1">
 
-        <ImageView
-            android:id="@+id/imageView1"
+        <Button
+            android:id="@+id/button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/seven01" />
+            android:layout_height="match_parent"
+            android:background="#00FFFFFF"/>
 
-        <ImageView
-            android:id="@+id/imageView2"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
-            app:srcCompat="@drawable/seven02" />
-    </LinearLayout>
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/cameraeffect"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="50dp"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/sevenlogo" />
+        </RelativeLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00FFFFFF" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/seven01" />
+        </RelativeLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frameLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00FFFFFF" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="50dp"
+                app:srcCompat="@drawable/seven02" />
+        </RelativeLayout>
+    </FrameLayout>
+
 </LinearLayout>

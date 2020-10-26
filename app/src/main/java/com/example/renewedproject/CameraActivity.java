@@ -481,14 +481,6 @@ public class CameraActivity extends AppCompatActivity {
     private void startProgress() {
         base.progressON(this, "상품 정보 추출중");
         tts.speak("상품 정보 추출 중입니다. 잠시만 기다려 주세요.");
-        //boolean result=true;
-//
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                base.progressOFF();
-//            }
-//        },0);
 
     }
 

@@ -27,12 +27,14 @@
             android:layout_marginBottom="0dp" />
 
         <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/cameraeffect"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            app:srcCompat="@drawable/cameraeffect"
-            android:scaleType="fitXY"/>
+            android:layout_marginBottom="-5dp"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/cameraeffect" />
 
 
     </RelativeLayout>
