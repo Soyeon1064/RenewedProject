@@ -27,8 +27,8 @@ public class MembershipActivity extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-        tts = TTSAdapter.getInstance(this);
-        tts.speak("화면을 좌우로 이동시키면 브랜드별 멤버십 정보 화면이 켜집니다. 지에스 멤버십 화면입니다.");
+//        tts = TTSAdapter.getInstance(this);
+//        tts.speak("화면을 좌우로 이동시키면 브랜드별 멤버십 정보 화면이 켜집니다. 지에스 멤버십 화면입니다."); //씹히더라.
 
     }
 }

@@ -39,7 +39,7 @@ public class CUMembership extends Fragment {
             @Override
             public void onClick(View v) {
                 //음성 설명
-                tts.speak("씨유 멤버십입니다. 제휴멤버십, 제휴카드, 편의점자체멤버십 " +
+                tts.speak("씨유 멤버십입니다. 제휴멤버십, 제휴카드, 편의점 자체멤버십 " +
                         "순으로 배치되어 있습니다.");
             }
         });

@@ -39,7 +39,7 @@ public class EmartMembership extends Fragment {
             @Override
             public void onClick(View v) {
                 //음성 설명
-                tts.speak("이마트24 멤버십입니다. 제휴멤버십, 편의점자체멤버십 " +
+                tts.speak("이마트24 멤버십입니다. 제휴멤버십, 편의점 자체멤버십 " +
                         "순으로 배치되어 있습니다.");
             }
         });

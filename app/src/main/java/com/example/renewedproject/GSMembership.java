@@ -41,7 +41,7 @@ public class GSMembership extends Fragment {
             @Override
             public void onClick(View v) {
                 //음성 설명
-                tts.speak("지에스25 멤버십입니다. 제휴멤버십, 제휴카드, 상품권, 편의점자체멤버십 " +
+                tts.speak("지에스25 멤버십입니다. 제휴멤버십, 제휴카드, 상품권, 편의점 자체멤버십 " +
                         "순으로 배치되어 있습니다.");
             }
         });
@@ -147,13 +147,13 @@ public class GSMembership extends Fragment {
                     for(int i=0; i<data.size(); i++){
                         if(data.get(i).getConv_type().equals("GS")){
                             if(data.get(i).getB_type().equals("제휴멤버십")){
-                                s1 +=data.get(i).getB_name()+", "+data.get(i).getB_ex()+"///";
+                                s1 +=data.get(i).getB_name()+", "+data.get(i).getB_ex()+".///";
                             }else if(data.get(i).getB_type().equals("제휴카드")){
-                                s2 +=data.get(i).getB_name()+", "+data.get(i).getB_ex()+"///";
+                                s2 +=data.get(i).getB_name()+", "+data.get(i).getB_ex()+".///";
                             }else if(data.get(i).getB_type().equals("상품권")){
-                                s3 +=data.get(i).getB_name()+", "+data.get(i).getB_ex()+"///";
+                                s3 +=data.get(i).getB_name()+", "+data.get(i).getB_ex()+".///";
                             }else{ //자체멤버십
-                                s4 +=data.get(i).getB_name()+", "+data.get(i).getB_ex()+"///";
+                                s4 +=data.get(i).getB_name()+", "+data.get(i).getB_ex()+".///";
                             }
                         }else{
                             continue;

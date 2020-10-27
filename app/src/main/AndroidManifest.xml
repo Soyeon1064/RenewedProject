@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/> <!-- 화면 꺼짐 방지 -->
+
 
     <application
         android:allowBackup="true"
@@ -22,7 +24,7 @@
         <activity
             android:name=".MembershipActivity"
             android:label="@string/title_activity_membership"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            ></activity>
         <activity android:name=".MapActivity" />
         <activity
             android:name=".SplashActivity"
