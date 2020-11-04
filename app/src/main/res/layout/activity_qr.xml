@@ -6,16 +6,5 @@
     android:layout_height="match_parent"
     android:background="@drawable/qrbackground">
 
-    <com.journeyapps.barcodescanner.DecoratedBarcodeView
-        android:id="@+id/dbvBarcode"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_centerHorizontal="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
-    </com.journeyapps.barcodescanner.DecoratedBarcodeView>
-
 </RelativeLayout>
 

@@ -7,18 +7,23 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.renewedproject.R;
 import com.example.renewedproject.SplashActivity;
 import com.example.renewedproject.TTSAdapter;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         tts = TTSAdapter.getInstance(this);
 
@@ -70,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         //tmp에 내용물이 있다면, 즉 권한 승인받지 못한 권한이 있다면
         if(TextUtils.isEmpty(tmp) == false) {
             //권한 요청하기
-            //tts.speak("어플을 이용하기 위해 화면에 뜨는 모든 권한을 허용해 주세요.");
+            tts.speak("어플을 이용하기 위해 화면에 뜨는 모든 권한을 허용해 주세요.");
             ActivityCompat.requestPermissions(this, tmp.trim().split(" "), 1);
             return false;
         }else{
@@ -101,7 +107,12 @@ public class MainActivity extends AppCompatActivity {
 
     //Button0-> 앱 도움말 버튼 클릭
     public void onTTSButtonClicked(View view) {
-        introduce = "상품인식. 멤버십 정보. 가까운 편의점 찾기 순서로 배치되어 있습니다.";
+        introduce = "시각 장애인 및 저시력자가 편의점의 편의 서비스를 쉽게 이용할 수 있도록 도와주는 어플 니편 내편 입니다."+
+                "메뉴는 지금 실행 중인 음성 사용 설명서부터 상품인식. 멤버십 정보. 가까운 편의점 순서로 배치되어 있습니다."+
+        "상품 인식 메뉴는 진열대 옆의 QR 코드를 사용자 휴대폰 카메라로 인식하고 인식된 상품의 이름, 가격, 할인 여부를 음성 및 화면으로 제공합니다."+
+        "멤버십 정보는 지에스 25, 씨유, 세븐 일레븐, 이마트 24 순서로 멤버십 정보를 제공합니다."+
+        "가까운 편의점 메뉴는 현재 사용자의 위치에서 가장 가까운 편의점을 알려줍니다. 위치와, 카메라 권한을 반드시 허용해 주세요.";
+
         tts.speak(introduce);
     }
 
