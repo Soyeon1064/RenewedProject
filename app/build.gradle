@@ -42,4 +42,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
     implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
     implementation files('libs\\com.skt.Tmap_1.64.jar')
+
+    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
 }

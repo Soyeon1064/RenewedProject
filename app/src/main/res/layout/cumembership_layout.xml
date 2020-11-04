@@ -16,7 +16,8 @@
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00FFFFFF"/>
+            android:background="?selectableItemBackground"
+            android:theme="@style/AppTheme.BlueRipple"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -58,7 +59,8 @@
             android:id="@+id/button1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00FFFFFF" />
+            android:background="?selectableItemBackground"
+            android:theme="@style/AppTheme.BlueRipple"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -99,7 +101,8 @@
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00FFFFFF" />
+            android:background="?selectableItemBackground"
+            android:theme="@style/AppTheme.BlueRipple" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -138,7 +141,8 @@
             android:id="@+id/button3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00FFFFFF" />
+            android:background="?selectableItemBackground"
+            android:theme="@style/AppTheme.BlueRipple" />
 
         <RelativeLayout
             android:layout_width="match_parent"

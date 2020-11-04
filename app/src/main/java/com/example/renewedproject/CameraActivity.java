@@ -345,187 +345,45 @@ public class CameraActivity extends AppCompatActivity {
         return code;
     }
 
-//    //                                myapp/imageupload version
-//    private void uploadImage(final File file) throws IOException {
-//
-//        //로딩 다이얼로그 화면 구현
-//        startProgress();
-//
-//        // FILE: device에서 storage access 권한 허용
-//        final String BASE_URL = "http://52.14.75.37:8000/";  // aws
-//        //final String BASE_URL = "http://10.0.2.2:8000";   // local
-//
-//        //1) 이미지 회전 최종 파일 serverFile
-//        //File을 Bitmap으로 변환
-//        try{
-//            Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-//            //서버에 이미지 전송시 회전 정렬하는 메소드 호출
-//            rotatedBitmap = fixOrientation(bitmap, file.getPath());
-//        }catch(Exception e){
-//            e.printStackTrace();
-//            Log.d("상황: ","file 비트맵 변환 실패");
-//        }
-//
-//        //반환된 rotatedBitmap을 다시 파일로 반환
-//        try{
-//            //serverFile = new File(Environment.getExternalStorageDirectory()+"/"+UUID.randomUUID().toString()+".jpg");
-//            serverFile = new File(filepath);
-//            OutputStream os = new BufferedOutputStream(new FileOutputStream(serverFile));
-//            rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-//            os.close();
-//        }catch(Exception e){
-//            e.printStackTrace();
-//            Log.d("상황: ", "서버로 보낼 이미지 파일 생성실패");
-//        }
-//
-//        Log.d("상황: file.getName()과 file.getPath()는 ",serverFile.getName()+","+serverFile.getPath());
-//
-//        //Retrofit 내용 GET하기
-//        getRetrofit();
-//
-//    }
-//                                myapp/imageupload version
-private void uploadImage(final File file) throws IOException {
+    //                                myapp/imageupload version
+    private void uploadImage(final File file) throws IOException {
 
-    //로딩 다이얼로그 화면 구현
-    startProgress();
+        //로딩 다이얼로그 화면 구현
+        startProgress();
 
-    // FILE: device에서 storage access 권한 허용
-    final String BASE_URL = "http://52.14.75.37:8000";  // aws
-    //final String BASE_URL = "http://10.0.2.2:8000";   // local
+        // FILE: device에서 storage access 권한 허용
+        final String BASE_URL = "http://52.14.75.37:8000/";  // aws
+        //final String BASE_URL = "http://10.0.2.2:8000";   // local
 
-    //1) 이미지 회전 최종 파일 serverFile
-    //File을 Bitmap으로 변환
-    try{
-        Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
-        //서버에 이미지 전송시 회전 정렬하는 메소드 호출
-        rotatedBitmap = fixOrientation(bitmap, file.getPath());
-    }catch(Exception e){
-        e.printStackTrace();
-        Log.d("상황: ","file 비트맵 변환 실패");
-    }
-
-    //반환된 rotatedBitmap을 다시 파일로 반환
-    try{
-        //serverFile = new File(Environment.getExternalStorageDirectory()+"/"+UUID.randomUUID().toString()+".jpg");
-        serverFile = new File(filepath);
-        OutputStream os = new BufferedOutputStream(new FileOutputStream(serverFile));
-        rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-        os.close();
-    }catch(Exception e){
-        e.printStackTrace();
-        Log.d("상황: ", "서버로 보낼 이미지 파일 생성실패");
-    }
-
-    Log.d("상황: file.getName()과 file.getPath()는 ",serverFile.getName()+","+serverFile.getPath());
-
-
-    //2) 위치
-    gps_tracker = new GpsTracker(this);
-    latitude = gps_tracker.getLatitude();
-    longitude = gps_tracker.getLongitude();
-//        latitude = 37.3400;
-//        longitude = 127.1153;
-    tmappoint = new TMapPoint(latitude, longitude);
-
-    //"편의점" 키워드로 검색
-    TMapData tMapData = new TMapData();
-    tMapData.findAroundNamePOI(tmappoint, "편의점", new TMapData.FindAroundNamePOIListenerCallback() {
-        @Override
-        public void onFindAroundNamePOI(ArrayList poiItem) {
-            if (poiItem == null) return;
-            TMapPoint my_point = new TMapPoint(latitude, longitude); // 현재 위치
-
-            //제일 가까운 편의점 찾기
-            double min_distance = Double.POSITIVE_INFINITY;
-            int min_index = -1;
-            TMapPOIItem item;
-            for (int i = 0; i < poiItem.size(); i++) {
-                item = (TMapPOIItem) poiItem.get(i);
-                double distance = item.getDistance(my_point);
-                if (distance < min_distance) {
-                    min_distance = distance;
-                    min_index = i;
-                }
-            }
-
-            //제일 가까운 편의점에서 20m 이내에 있으면 동일 편의점으로 간주
-            if (min_index >= 0 && min_distance <= 20) { // 20 meters
-                item = (TMapPOIItem) poiItem.get(min_index);
-                cvs_name = item.getPOIName().toString();
-            } else
-                cvs_name = "not_found";
-            Log.d("CameraActivity", "편의점이름: " + cvs_name);
-            // String title = cvs_name + "@(" + latitude + "," + longitude + ")";
-
-            //편의점 이름을 cvs_code로 변환해서 title에 저장
-            String title = get_cvs_code(cvs_name);
-            Log.d("CameraActivity", "CVS name: " + title);
-
-            Date now = new Date();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            RequestBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("title", title)
-                    .addFormDataPart("image", serverFile.getName(), RequestBody.create(MultipartBody.FORM, serverFile))
-                    .addFormDataPart("upload", format.format(now))
-                    .build();
-
-            Request request = new Request.Builder()
-                    .url(BASE_URL + "/myapp/imageupload/")
-                    .post(requestBody)
-                    .build();
-
-            OkHttpClient client = new OkHttpClient.Builder()
-                    .connectTimeout(10, TimeUnit.SECONDS)
-                    .writeTimeout(10, TimeUnit.SECONDS)
-                    .readTimeout(30, TimeUnit.SECONDS)
-                    .retryOnConnectionFailure(true)
-                    .build();
-
-            client.newCall(request).enqueue(new okhttp3.Callback() {
-                @Override
-                public void onFailure(okhttp3.Call call, IOException e) {
-                    Log.d(TAG, "POST: Connection error " + e.toString());
-                    final String error_msg = e.toString();
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(CameraActivity.this, error_msg, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-                @Override
-                public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                    String TAG = "Camera Activity";
-                    final String response_body = response.body().string();
-                    if (response.isSuccessful()) {
-                        Log.d(TAG, "등록 완료");
-                        //Retrofit 내용 GET하기
-                        getRetrofit();
-//                        //Log.d(TAG, "onResponse: " + response.body().string());
-//
-//                        //인식된 text를 tts로 말하기
-//                        tts.speak(response_body);
-                    } else {
-                        Log.d(TAG, "Server Response Code : " + response.code());
-                        Log.d(TAG, response.toString());
-                        //Log.d(TAG, call.request().body().toString());
-                        //오류 발생시에 재촬영 요청
-                        tts.speak("오류입니다. 다시 한 번 촬영해 주세요.");
-                    }
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(CameraActivity.this, response_body, Toast.LENGTH_LONG).show();
-                        }
-                    });
-                    System.out.println(response_body);
-                    response.body().close();
-                }
-            });
+        //1) 이미지 회전 최종 파일 serverFile
+        //File을 Bitmap으로 변환
+        try{
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+            //서버에 이미지 전송시 회전 정렬하는 메소드 호출
+            rotatedBitmap = fixOrientation(bitmap, file.getPath());
+        }catch(Exception e){
+            e.printStackTrace();
+            Log.d("상황: ","file 비트맵 변환 실패");
         }
-    });
-}
+
+        //반환된 rotatedBitmap을 다시 파일로 반환
+        try{
+            //serverFile = new File(Environment.getExternalStorageDirectory()+"/"+UUID.randomUUID().toString()+".jpg");
+            serverFile = new File(filepath);
+            OutputStream os = new BufferedOutputStream(new FileOutputStream(serverFile));
+            rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.close();
+        }catch(Exception e){
+            e.printStackTrace();
+            Log.d("상황: ", "서버로 보낼 이미지 파일 생성실패");
+        }
+
+        Log.d("상황: file.getName()과 file.getPath()는 ",serverFile.getName()+","+serverFile.getPath());
+
+        //Retrofit 내용 GET하기
+        getRetrofit();
+
+    }
 
     public void getRetrofit() {
         Log.d("상황: ", "retrofitGet 메소드에 진입");
@@ -546,7 +404,6 @@ private void uploadImage(final File file) throws IOException {
                             +data2.get(i).getEvent_cd() + ". \n\n";
                 }
 
-                //이미지 추출 결과 다이얼로그로 제공
                 show(result);
                 Log.d("상황: ",result);
             }
@@ -556,6 +413,36 @@ private void uploadImage(final File file) throws IOException {
                 Log.d("상황: ", "상품 인식에서 GET 실패");
             }
         });
+
+        //데이터 가져오기
+        //내용 다 뽑아와라
+//        retrofitService.getData("GS").enqueue(new Callback<List<Post>>() {
+//            //응답 성공했을 때- json 파일 가져오기
+//            @Override
+//            public void onResponse(@NonNull Call<List<Post>> call, @NonNull Response<List<Post>> response) {
+//
+//                List<Post> data2 = response.body();
+//                Log.d("상황: ", "상품 인식에서 GET 성공");
+//                String result = null;
+//
+//                base.progressOFF();
+//                //상품 이름, 가격, 행사 내용
+//                for (int i = 0; i < data2.size(); i++) {
+////                    result +=  "상품 이름. "+data2.get(i).getProd_name()+"\n가격. "+data2.get(i).getProd_price()+"\n행사 "
+////                            +data2.get(i).getProd_name() + ". \n";
+//                }
+//
+//                Toast.makeText(CameraActivity.this, result, Toast.LENGTH_LONG).show();
+//                Log.d("상황: ", result);
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Post>> call, Throwable t) {
+//                Log.d("상황: ", "상품 인식에서 GET 실패");
+//                t.printStackTrace();
+//            }
+//        });
 
     }
 

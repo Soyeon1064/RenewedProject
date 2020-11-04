@@ -27,10 +27,11 @@
 
             <Button
                 android:id="@+id/button00"
+                android:background="?selectableItemBackground"
+                android:theme="@style/AppTheme.BlueRipple"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#00FFFFFF"
-                android:onClick="onTTSButtonClicked" />
+                android:onClick="onTTSButtonClicked"/>
 
             <ImageView
                 android:id="@+id/imageView4"
@@ -62,10 +63,11 @@
 
             <Button
                 android:id="@+id/button01"
+                android:background="?selectableItemBackground"
+                android:theme="@style/AppTheme.BlueRipple"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#00ffffff"
-                android:onClick="onButtonCameraClicked" />
+                android:onClick="onButtonCameraClicked"/>
 
             <ImageView
                 android:id="@+id/menu01"
@@ -86,8 +88,9 @@
                 android:id="@+id/button02"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#00ffffff"
-                android:onClick="onMembershipButtonClicked" />
+                android:background="?selectableItemBackground"
+                android:theme="@style/AppTheme.BlueRipple"
+                android:onClick="onMembershipButtonClicked"/>
 
             <ImageView
                 android:id="@+id/menu02"
@@ -108,8 +111,9 @@
                 android:id="@+id/button03"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#00ffffff"
-                android:onClick="onLocationButtonClicked" />
+                android:background="?selectableItemBackground"
+                android:theme="@style/AppTheme.BlueRipple"
+                android:onClick="onLocationButtonClicked"/>
 
             <ImageView
                 android:id="@+id/menu03"

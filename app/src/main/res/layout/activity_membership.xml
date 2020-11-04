@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="103dp"
         android:background="@drawable/membershipeffect"
-        android:theme="@style/AppTheme.AppBarOverlay">
+       >
 
         <TextView
             android:id="@+id/title"
