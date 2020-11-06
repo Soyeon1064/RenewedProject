@@ -23,8 +23,8 @@ public class SplashActivity extends Activity {
 
         //진동 설정
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        //v.vibrate(2000);
-        v.vibrate(VibrationEffect.createOneShot(2000,5));
+        v.vibrate(2000);
+        //v.vibrate(VibrationEffect.createOneShot(2000,5)); //이걸 이용하면 진동이 울리지 않음
 
         startLoading();
     }

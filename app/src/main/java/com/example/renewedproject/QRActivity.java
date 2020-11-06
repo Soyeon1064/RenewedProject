@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -17,6 +19,9 @@ import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapPOIItem;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,9 +63,14 @@ public class QRActivity extends AppCompatActivity{
         setContentView(R.layout.activity_qr);
         tts = TTSAdapter.getInstance(this);
 
+        tMapView = new TMapView(this);
+        tMapView.setHttpsMode(true);
+
+        //지도 초기 설정
+        tMapView.setSKTMapApiKey("l7xx8af54a909a6e4bb8a498c7628aae0720");
+
         //화면 꺼짐 방지
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
 
         scanCode(); //스캔 화면을 키기 위한 메소드 호출
     }
@@ -85,144 +95,120 @@ public class QRActivity extends AppCompatActivity{
         if (result != null) {
             if (result.getContents() != null) { //상품 정보가 있다면
 
-                String productName = result.getContents();
+                final String productName = result.getContents();
 
-                //사용자가 위치하고 있는 편의점 명 추출
-                String location = getLocation();
+                gps_tracker = new GpsTracker(this);
+                latitude = gps_tracker.getLatitude();
+                longitude = gps_tracker.getLongitude();
+                tmappoint = new TMapPoint(latitude, longitude);
+                //"편의점" 키워드로 검색
+                TMapData tMapData = new TMapData();
+                tMapData.findAroundNamePOI(tmappoint, "편의점", new TMapData.FindAroundNamePOIListenerCallback() {
+                    @Override
+                    public void onFindAroundNamePOI(ArrayList poiItem) {
+                        if (poiItem == null) return;
+                        TMapPoint my_point = new TMapPoint(latitude, longitude); // 현재 위치
 
-                //product html 통신해서 상품 정보 불러 들이고 통신 완료 하면 GET 호출
-                //편의점브랜드랑 상품명 보내는 거 toServer 메소드에서 실행 시키려고 했음.
-                //그런데 실행이 안 돼서 혹시 몰라 원래 있었던 이곳에다가 했는데도 안 됨.
-                //toServer(product, location);
-                //서버로 productName과 편의점 위치 보내기
-//                final String BASE_URL = "http://52.14.75.37:8000/";  // aws
-//
-//                RequestBody requestBody = new MultipartBody.Builder()
-//                        .setType(MultipartBody.FORM)
-//                        .addFormDataPart("title", location)
-//                        .addFormDataPart("prod_name", productName)
-//                        .build();
-//
-//                Request request = new Request.Builder()
-//                        .url(BASE_URL + "/myapp/qrcode/")
-//                        .post(requestBody)
-//                        .build();
-//
-//                OkHttpClient client = new OkHttpClient.Builder()
-//                        .connectTimeout(10, TimeUnit.SECONDS)
-//                        .writeTimeout(10, TimeUnit.SECONDS)
-//                        .readTimeout(30, TimeUnit.SECONDS)
-//                        .retryOnConnectionFailure(true)
-//                        .build();
-//
-//                client.newCall(request).enqueue(new okhttp3.Callback() {
-//                    @Override
-//                    public void onFailure(okhttp3.Call call, IOException e) {
-//                        Log.d(TAG, "POST: Connection error " + e.toString());
-//                        final String error_msg = e.toString();
-//                        runOnUiThread(new Runnable() {
-//                            public void run() {
-//                                Toast.makeText(QRActivity.this, error_msg, Toast.LENGTH_SHORT).show();
-//                            }
-//                        });
-//                    }
-//
-//                    @Override
-//                    public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-//                        final String response_body = response.body().string();
-//                        if (response.isSuccessful()) {
-//                            Log.d(TAG, "등록 완료");
-//                            //Log.d(TAG, "onResponse: " + response.body().string());
-//                            //인식된 text를 tts로 말하기
-//                            //tts.speak(response_body);
-//                        } else {
-//                            Log.d(TAG, "Server Response Code : " + response.code());
-//                            Log.d(TAG, response.toString());
-//                            //Log.d(TAG, call.request().body().toString());
-//                            //오류 발생시에 재촬영 요청
-//                            tts.speak("오류입니다. 다시 한 번 촬영해 주세요.");
-//                        }
-//                        runOnUiThread(new Runnable() {
-//                            public void run() {
-//                                Toast.makeText(QRActivity.this, response_body, Toast.LENGTH_LONG).show();
-//                            }
-//                        });
-//                        System.out.println(response_body);
-//                        response.body().close();
-//                    }
-//                });
+                        //제일 가까운 편의점 찾기
+                        double min_distance = Double.POSITIVE_INFINITY;
+                        int min_index = -1;
+                        TMapPOIItem item;
+                        for (int i = 0; i < poiItem.size(); i++) {
+                            item = (TMapPOIItem) poiItem.get(i);
+                            double distance = item.getDistance(my_point);
+                            if (distance < min_distance) {
+                                min_distance = distance;
+                                min_index = i;
+                            }
+                        }
 
-                getRetrofit(productName);
-                
+                        //제일 가까운 편의점에서 20m 이내에 있으면 동일 편의점으로 간주
+                        if (min_index >= 0 && min_distance <= 20) { // 20 meters
+                            item = (TMapPOIItem) poiItem.get(min_index);
+                            cvs_name = item.getPOIName().toString();
+                        } else
+                            cvs_name = "not_found";
+                        Log.d("QRActivity", "편의점이름: " + cvs_name);
+                        // String title = cvs_name + "@(" + latitude + "," + longitude + ")";
+
+                        //편의점 이름을 cvs_code로 변환해서 title에 저장
+                        String title = get_cvs_code(cvs_name);
+                        Log.d("QRActivity", "CVS name: " + title);
+                        //cvs = title; //전역변수
+
+                        // 서버로 productName과 편의점 위치 보내기
+                        final String BASE_URL = "http://52.14.75.37:8000";  // aws
+
+                        RequestBody requestBody = new MultipartBody.Builder()
+                                .setType(MultipartBody.FORM)
+                                .addFormDataPart("title", title)
+                                .addFormDataPart("prod_name", productName)
+                                .build();
+
+                        Request request = new Request.Builder()
+                                .url(BASE_URL + "/myapp/qrview/")
+                                .post(requestBody)
+                                .build();
+
+                        OkHttpClient client = new OkHttpClient.Builder()
+                                .connectTimeout(10, TimeUnit.SECONDS)
+                                .writeTimeout(10, TimeUnit.SECONDS)
+                                .readTimeout(30, TimeUnit.SECONDS)
+                                .retryOnConnectionFailure(true)
+                                .build();
+
+                        client.newCall(request).enqueue(new okhttp3.Callback() {
+                            @Override
+                            public void onFailure(okhttp3.Call call, IOException e) {
+                                Log.d(TAG, "POST: Connection error " + e.toString());
+                                final String error_msg = e.toString();
+                                runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        Toast.makeText(QRActivity.this, error_msg, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                                final String response_body = response.body().string();
+                                if (response.isSuccessful()) {
+                                    Log.d(TAG, "등록 완료");
+                                    //Log.d(TAG, "onResponse: " + response.body().string());
+                                    //인식된 text를 tts로 말하기
+                                    speak_prod_info(response_body);
+                                    //tts.speak(response_body);
+                                    //getRetrofit(productName); //무엇을 인식시켜도 한라봉에이드만 계속 나옴
+                                } else {
+                                    Log.d(TAG, "Server Response Code : " + response.code());
+                                    Log.d(TAG, response.toString());
+                                    //Log.d(TAG, call.request().body().toString());
+                                    //오류 발생시에 재촬영 요청
+                                    tts.speak("오류입니다. 다시 한 번 촬영해 주세요.");
+                                }
+                                runOnUiThread(new Runnable() {
+                                    public void run() {
+                                        //Toast.makeText(QRActivity.this, response_body, Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                                System.out.println(response_body);
+                                response.body().close();
+                            }
+                        });
+                    }
+                });
+
+                //getRetrofit(productName); //무엇을 인식시켜도 한라봉에이드만 계속 나옴
+
+            } else {
+                Toast.makeText(this, "결과 없음.", Toast.LENGTH_LONG).show();
+                tts.speak("추출된 상품 정보가 없습니다. 다시 돌아가서 QR 코드를 인식해 주세요.");
+            }
         } else {
-            Toast.makeText(this, "결과 없음.", Toast.LENGTH_LONG).show();
-            tts.speak("추출된 상품 정보가 없습니다. 다시 돌아가서 QR 코드를 인식해 주세요.");
-        }
-    }else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
-//    private void toServer(String productName, String location) {
-//        //서버로 productName과 편의점 위치 보내기
-//        final String BASE_URL = "http://52.14.75.37:8000/";  // aws
-//
-//        RequestBody requestBody = new MultipartBody.Builder()
-//                .setType(MultipartBody.FORM)
-//                .addFormDataPart("title", location)
-//                .addFormDataPart("prod_name", productName)
-//                .build();
-//
-//        Request request = new Request.Builder()
-//                .url(BASE_URL + "/myapp/qrcode/")
-//                .post(requestBody)
-//                .build();
-//
-//        OkHttpClient client = new OkHttpClient.Builder()
-//                .connectTimeout(10, TimeUnit.SECONDS)
-//                .writeTimeout(10, TimeUnit.SECONDS)
-//                .readTimeout(30, TimeUnit.SECONDS)
-//                .retryOnConnectionFailure(true)
-//                .build();
-//
-//        client.newCall(request).enqueue(new okhttp3.Callback() {
-//            @Override
-//            public void onFailure(okhttp3.Call call, IOException e) {
-//                Log.d(TAG, "POST: Connection error " + e.toString());
-//                final String error_msg = e.toString();
-//                runOnUiThread(new Runnable() {
-//                    public void run() {
-//                        Toast.makeText(QRActivity.this, error_msg, Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-//                final String response_body = response.body().string();
-//                if (response.isSuccessful()) {
-//                    Log.d(TAG, "등록 완료");
-//                    //Log.d(TAG, "onResponse: " + response.body().string());
-//                    //인식된 text를 tts로 말하기
-//                    //tts.speak(response_body);
-//                } else {
-//                    Log.d(TAG, "Server Response Code : " + response.code());
-//                    Log.d(TAG, response.toString());
-//                    //Log.d(TAG, call.request().body().toString());
-//                    //오류 발생시에 재촬영 요청
-//                    tts.speak("오류입니다. 다시 한 번 촬영해 주세요.");
-//                }
-//                runOnUiThread(new Runnable() {
-//                    public void run() {
-//                        Toast.makeText(QRActivity.this, response_body, Toast.LENGTH_LONG).show();
-//                    }
-//                });
-//                System.out.println(response_body);
-//                response.body().close();
-//            }
-//        });
-//
-//    }
 
     private void getRetrofit(String prod_name) {
         Retrofit retrofit2 = new Retrofit.Builder().baseUrl("http://52.14.75.37:8000/myapp/").
@@ -259,7 +245,46 @@ public class QRActivity extends AppCompatActivity{
 
     }
 
+    private void speak_prod_info(String response) {
+        String prod_name = null;
+        int prod_price = -1;
+        String event_cd = null;
 
+        String prod_info = "";
+        String response1 = response.substring(1, response.length()-1);  //어차피 상품 정보 하나만 있으니까 for문 돌릴 필요 없음.
+        System.out.println("Response1 = " + response1);
+        try {
+            JSONObject jsonObject = new JSONObject(response1);
+            // get a String from the JSON object
+            prod_name = (String) jsonObject.get("prod_name");
+            prod_price = (int) jsonObject.get("prod_price");
+            event_cd = (String) jsonObject.get("event_cd");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        if (prod_name != null && prod_price != -1) {
+            if (event_cd == null) { //이벤트 값 없으면
+                prod_info = "상품 이름 " + prod_name + "\n가격 " + prod_price + "원.\n일반 상품.";
+            } else {
+                prod_info = "상품 이름 " + prod_name + "\n가격 " + prod_price + "원.\n할인 행사 " + event_cd + ".";
+            }
+        }
+
+        System.out.println("prod_info = " + prod_info);
+        Handler mHandler = new Handler(Looper.getMainLooper());
+        final String stmt = prod_info;
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                show(stmt);
+            }
+        }, 0);
+
+        Log.d("상황: ", prod_info);
+    }
 
     //팝업창과 음성 알림 메소드
     private void show(String prod_info) {
@@ -285,50 +310,6 @@ public class QRActivity extends AppCompatActivity{
         dialog.show();
     }
 
-    private String getLocation() {
-        gps_tracker = new GpsTracker(this);
-        latitude = gps_tracker.getLatitude();
-        longitude = gps_tracker.getLongitude();
-        tmappoint = new TMapPoint(latitude, longitude);
-        //"편의점" 키워드로 검색
-        TMapData tMapData = new TMapData();
-        tMapData.findAroundNamePOI(tmappoint, "편의점", new TMapData.FindAroundNamePOIListenerCallback() {
-            @Override
-            public void onFindAroundNamePOI(ArrayList poiItem) {
-                if (poiItem == null) return;
-                TMapPoint my_point = new TMapPoint(latitude, longitude); // 현재 위치
-
-                //제일 가까운 편의점 찾기
-                double min_distance = Double.POSITIVE_INFINITY;
-                int min_index = -1;
-                TMapPOIItem item;
-                for (int i = 0; i < poiItem.size(); i++) {
-                    item = (TMapPOIItem) poiItem.get(i);
-                    double distance = item.getDistance(my_point);
-                    if (distance < min_distance) {
-                        min_distance = distance;
-                        min_index = i;
-                    }
-                }
-
-                //제일 가까운 편의점에서 20m 이내에 있으면 동일 편의점으로 간주
-                if (min_index >= 0 && min_distance <= 20) { // 20 meters
-                    item = (TMapPOIItem) poiItem.get(min_index);
-                    cvs_name = item.getPOIName().toString();
-                } else
-                    cvs_name = "not_found";
-                Log.d("QRActivity", "편의점이름: " + cvs_name);
-                // String title = cvs_name + "@(" + latitude + "," + longitude + ")";
-
-                //편의점 이름을 cvs_code로 변환해서 title에 저장
-                String title = get_cvs_code(cvs_name);
-                Log.d("QRActivity", "CVS name: " + title);
-                cvs = title; //전역변수
-            }
-        });
-        return cvs;
-    }
-
     //편의점 이름을 cvs_code로 변환(키워드로 변환)
     private String get_cvs_code(String cvs_info) {
         String code;
@@ -342,11 +323,9 @@ public class QRActivity extends AppCompatActivity{
         return code;
     }
 
-
     //어플이 꺼지거나 중단 된다면 TTS 어댑터의 ttsShutdown() 메소드 호출하기
     protected void onDestroy() {
         super.onDestroy();
         tts.ttsShutdown();
     }
-
 }
