@@ -116,16 +116,16 @@ public class MainActivity extends AppCompatActivity {
         tts.speak(introduce);
     }
 
-//    //Button1-> 사물인식_카메라 촬영 버튼 클릭
-//    public void onButtonCameraClicked(View view) {
-//        Intent intent = new Intent(this, CameraActivity.class);
-//        startActivity(intent);
-//    }
     //Button1-> 사물인식_카메라 촬영 버튼 클릭
     public void onButtonCameraClicked(View view) {
-        Intent intent = new Intent(this, QRActivity.class);
+        Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
     }
+    //Button1-> 사물인식_카메라 촬영 버튼 클릭
+//    public void onButtonCameraClicked(View view) {
+//        Intent intent = new Intent(this, QRActivity.class);
+//        startActivity(intent);
+//    }
 
 
     //Button2-> 멤버십 안내 버튼 클릭

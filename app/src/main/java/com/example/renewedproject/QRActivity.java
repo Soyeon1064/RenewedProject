@@ -38,6 +38,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+//편의점 'seven'으로 강제 return 못하도록 변경해야 함
+//event_cd 가 null 값으로 되는 것에서 또 다시 문제가 발생했음. 그래서 DB쪽에서 강제로evnet_cd 값을 주는
+//억지를 쓰셨다고 했음 ... 나중에 고칠 수 있으면 고칠 것.
 
 public class QRActivity extends AppCompatActivity{
     private TTSAdapter tts=null;
@@ -92,6 +95,10 @@ public class QRActivity extends AppCompatActivity{
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+//        //민아 언니 휴대폰 결과 확인 위해서
+//        Toast.makeText(this, "결과 코드: "+result.getContents()+"\ndata.getStringExtra: "+data.getStringExtra("SCAN_RESULT"), Toast.LENGTH_LONG).show();
+
         if (result != null) {
             if (result.getContents() != null) { //상품 정보가 있다면
 
@@ -246,6 +253,8 @@ public class QRActivity extends AppCompatActivity{
     }
 
     private void speak_prod_info(String response) {
+
+        String before = null;
         String prod_name = null;
         int prod_price = -1;
         String event_cd = null;
@@ -259,17 +268,30 @@ public class QRActivity extends AppCompatActivity{
             prod_name = (String) jsonObject.get("prod_name");
             prod_price = (int) jsonObject.get("prod_price");
             event_cd = (String) jsonObject.get("event_cd");
+
+//            if(((String)jsonObject.get("event_cd")).contains("1+1") || ((String)jsonObject.get("event_cd")).contains("2+1")){
+//                event_cd = (String) jsonObject.get("event_cd");
+//            }else event_cd = null;
+            Log.d("상품가격1: ", event_cd);
+            before = "prod_name은 "+prod_name+"/prod_price는 "+prod_price+"/event_cd는 "+event_cd;
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
 
+        Log.d("상품가격: ",event_cd);
+
         if (prod_name != null && prod_price != -1) {
-            if (event_cd == null) { //이벤트 값 없으면
-                prod_info = "상품 이름 " + prod_name + "\n가격 " + prod_price + "원.\n일반 상품.";
-            } else {
+//            if (event_cd == null) { //이벤트 값 없으면
+//                prod_info = "상품 이름 " + prod_name + "\n가격 " + prod_price + "원.\n일반 상품.";
+//            } else {
+//                prod_info = "상품 이름 " + prod_name + "\n가격 " + prod_price + "원.\n할인 행사 " + event_cd + ".";
+//            }
+            if(event_cd.equals("1+1")||event_cd.equals("2+1")){
                 prod_info = "상품 이름 " + prod_name + "\n가격 " + prod_price + "원.\n할인 행사 " + event_cd + ".";
+            }else{
+                prod_info = "상품 이름 " + prod_name + "\n가격 " + prod_price + "원.\n일반 상품.";
             }
         }
 
@@ -282,7 +304,7 @@ public class QRActivity extends AppCompatActivity{
                 show(stmt);
             }
         }, 0);
-
+        Log.d("상황: ","before 정보 딩당동"+before);
         Log.d("상황: ", prod_info);
     }
 
@@ -312,20 +334,21 @@ public class QRActivity extends AppCompatActivity{
 
     //편의점 이름을 cvs_code로 변환(키워드로 변환)
     private String get_cvs_code(String cvs_info) {
-        String code;
-        if (cvs_info.trim().startsWith("세븐일레븐")) code = "seven";
-        else if (cvs_info.trim().startsWith("이마트24")) code = "emart";
-        else if (cvs_info.trim().startsWith("GS25")) code = "GS";
-        else if (cvs_info.trim().startsWith("CU")) code = "CU";
-        else code = "none";
-        Log.d("CameraActivity", "cvs_info:" + cvs_info);
-        Log.d("CameraActivity", "code: " + code);
-        return code;
+//        String code;
+////        if (cvs_info.trim().startsWith("세븐일레븐")) code = "seven";
+////        else if (cvs_info.trim().startsWith("이마트24")) code = "emart";
+////        else if (cvs_info.trim().startsWith("GS25")) code = "GS";
+////        else if (cvs_info.trim().startsWith("CU")) code = "CU";
+////        else code = "none";
+////        Log.d("CameraActivity", "cvs_info:" + cvs_info);
+////        Log.d("CameraActivity", "code: " + code);
+////        return code;
+        return "seven"; //테스트 중 > seven으로 명시함.
     }
 
-    //어플이 꺼지거나 중단 된다면 TTS 어댑터의 ttsShutdown() 메소드 호출하기
+    //어플이 꺼지거나 중단 된다면 TTS 어댑터의 stop()호출
     protected void onDestroy() {
         super.onDestroy();
-        tts.ttsShutdown();
+        tts.stop();
     }
 }
